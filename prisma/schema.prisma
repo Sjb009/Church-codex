@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Announcement {
+  id          String               @id @default(cuid())
+  title       String
+  body        String               @db.NVarChar(Max)
+  status      String               @default("DRAFT")
+  publishAt   DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+}
+
+model PrayerRequest {
+  id             String                @id @default(cuid())
+  fullName       String?
+  email          String?
+  phoneNumber    String?
+  request        String                @db.NVarChar(Max)
+  category       String                @default("GENERAL")
+  status         String                @default("PENDING")
+  isConfidential Boolean               @default(false)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+}
+
+model ServiceType {
+  id          String             @id @default(cuid())
+  name        String             @unique
+  description String?
+  isActive    Boolean            @default(true)
+  attendances AttendanceRecord[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+}
+
+model AttendanceRecord {
+  id             String       @id @default(cuid())
+  serviceTypeId  String
+  serviceDate    DateTime
+  attendeeCount  Int
+  notes          String?      @db.NVarChar(Max)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  serviceType    ServiceType  @relation(fields: [serviceTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([serviceTypeId, serviceDate])
+}
