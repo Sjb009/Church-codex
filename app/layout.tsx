@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Church Codex",
-  description: "Church admin tools for announcements, prayer requests, and attendance.",
+  title: "MPP Homepage",
+  description: "Church Platform for announcements, prayer requests, and attendance.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
